@@ -719,8 +719,9 @@ class main {
                  WHERE tok.oidcusername '.$upnsql.' AND u.username '.$usernamesql.' AND u.mnethostid = ? AND u.deleted = ? ';
         $params = array_merge(['user'], $upnparams, $usernameparams, [$CFG->mnet_localhost_id, '0']);
         $linkedexistingusers = $DB->get_records_sql($sql, $params);
-
-        $existingusers = array_merge($existingusers, $linkedexistingusers);
+        
+        //array_merge function does not preserve numeric key values. See https://www.php.net/manual/ru/function.array-merge.php#92602
+        $existingusers = $existingusers + $linkedexistingusers;
 
         foreach ($aadusers as $user) {
             $this->mtrace(' ');
